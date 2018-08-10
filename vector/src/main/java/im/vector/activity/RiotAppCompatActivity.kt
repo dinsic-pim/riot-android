@@ -18,6 +18,7 @@
 package im.vector.activity
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.annotation.LayoutRes
@@ -146,6 +147,21 @@ abstract class RiotAppCompatActivity : AppCompatActivity() {
             unregisterReceiver(debugReceiver)
             debugReceiver = null
         }
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransitionExit()
+    }
+
+    override fun startActivity(intent: Intent?) {
+        super.startActivity(intent)
+        overridePendingTransitionEnter()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransitionExit()
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -293,4 +309,24 @@ abstract class RiotAppCompatActivity : AppCompatActivity() {
         ConsentNotGivenHelper(this, savedInstanceState)
                 .apply { addToRestorables(this) }
     }
+
+
+    /* ==========================================================================================
+     * Transitions between activities management
+     * ========================================================================================== */
+
+    /**
+     * Overrides the pending Activity transition by performing the "Enter" animation.
+     */
+    private fun overridePendingTransitionEnter() {
+        overridePendingTransition(R.anim.tchap_anim_slide_in_right, R.anim.tchap_anim_slide_out_right)
+    }
+
+    /**
+     * Overrides the pending Activity transition by performing the "Exit" animation.
+     */
+    private fun overridePendingTransitionExit() {
+        overridePendingTransition(R.anim.tchap_anim_slide_in_left, R.anim.tchap_anim_slide_out_left)
+    }
+
 }
