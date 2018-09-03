@@ -585,6 +585,10 @@
     <string name="room_settings_forget">Forget</string>
     <string name="room_settings_add_homescreen_shortcut">Add Homescreen Shortcut</string>
 
+    <string name="room_settings_pin_swipe">Pin</string>
+    <string name="room_settings_mute_swipe">Mute</string>
+    <string name="room_settings_leave_swipe">Leave</string>
+
     <!-- home sliding menu -->
     <string name="room_sliding_menu_messages">Messages</string>
     <string name="room_sliding_menu_settings">Settings</string>

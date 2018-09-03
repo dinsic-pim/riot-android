@@ -25,12 +25,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import com.chauthai.swipereveallayout.ViewBinderHelper;
 import org.matrix.androidsdk.data.Room;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.gouv.tchap.util.DinsicUtils;
@@ -43,6 +41,7 @@ public class TchapRoomAdapter extends AbsAdapter {
 
     private static final String LOG_TAG = TchapRoomAdapter.class.getSimpleName();
 
+    private final ViewBinderHelper binderHelper = new ViewBinderHelper();
     private final AdapterSection<Room> mRoomsSection;
 
     private final OnSelectItemListener mListener;
@@ -62,24 +61,26 @@ public class TchapRoomAdapter extends AbsAdapter {
                 R.layout.adapter_item_room_view, TYPE_HEADER_DEFAULT, TYPE_UNDEFINED, new ArrayList<Room>(), DinsicUtils.getRoomsComparator(mSession, false)) {
             @Override
             public int getContentViewType(int position) {
-                    // In order to retrieve the position of the item in the list,
-                    // we must take into account the header of the section.
-                    // As the header occupies the 1st position of the items list,
-                    // we remove 1 from the position of the item in the list.
-                    if (position - 1 < getFilteredItems().size()) {
-                        final Room room = getFilteredItems().get(position - 1);
-                        if (room.isDirect()) {
-                            return TYPE_ROOM_DIRECT;
-                        } else {
-                            return TYPE_ROOM;
-                        }
+                // In order to retrieve the position of the item in the list,
+                // we must take into account the header of the section.
+                // As the header occupies the 1st position of the items list,
+                // we remove 1 from the position of the item in the list.
+                if (position - 1 < getFilteredItems().size()) {
+                    final Room room = getFilteredItems().get(position - 1);
+                    if (room.isDirect()) {
+                        return TYPE_ROOM_DIRECT;
+                    } else {
+                        return TYPE_ROOM;
                     }
-                    return TYPE_UNDEFINED;
+                }
+                return TYPE_UNDEFINED;
             }
         };
         mRoomsSection.setEmptyViewPlaceholder(context.getString(R.string.no_room_placeholder), context.getString(R.string.no_result_placeholder));
-        
+
         addSection(mRoomsSection);
+
+        binderHelper.setOpenOnlyOne(true);
     }
 
     /*
@@ -112,8 +113,11 @@ public class TchapRoomAdapter extends AbsAdapter {
             case TYPE_ROOM_DIRECT:
                 final RoomViewHolder roomViewHolder = (RoomViewHolder) viewHolder;
                 final Room room = (Room) getItemForPosition(position);
+                // Use ViewBindHelper to restore and save the open/close state of the SwipeRevealView
+                // put an unique string id as value, can be any string which uniquely define the data
+                binderHelper.bind(roomViewHolder.swipeLayout, String.valueOf(room));
                 roomViewHolder.populateViews(mContext, mSession, room, false, false, mMoreRoomActionListener);
-                roomViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                roomViewHolder.roomItemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mListener.onSelectItem(room, -1);
@@ -152,6 +156,7 @@ public class TchapRoomAdapter extends AbsAdapter {
      */
 
     class PublicRoomViewHolder extends RecyclerView.ViewHolder {
+
         @BindView(R.id.public_room_avatar)
         ImageView vPublicRoomAvatar;
 

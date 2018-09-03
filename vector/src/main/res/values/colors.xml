@@ -30,6 +30,9 @@
     <color name="tchap_gray_86">#FF868686</color>
     <color name="tchap_navigation_menu_text_color">#9b9b9b</color>
     <color name="tchap_presence_status_color">#60ad0d</color>
+    <color name="tchap_swipe_pin_button_color">#17124a9d</color>
+    <color name="tchap_swipe_silent_notification_button_color">#3f124a9d</color>
+    <color name="tchap_swipe_exit_button_color">#ec202e</color>
 
     <!-- home activity tab bar color -->
     <color name="tab_home">@color/vector_green_color</color>

@@ -315,6 +315,10 @@ Cliquez sur exporter pour les sauvegarder avant de vous déconnecter.</string>
     <string name="room_settings_leave_conversation">Quitter la conversation</string>
     <string name="room_settings_forget">Oublier</string>
 
+    <string name="room_settings_pin_swipe">Epingler</string>
+    <string name="room_settings_mute_swipe">Sourdine</string>
+    <string name="room_settings_leave_swipe">Quitter</string>
+
     <string name="room_sliding_menu_messages">Messages</string>
     <string name="room_sliding_menu_settings">Paramètres</string>
     <string name="room_sliding_menu_version">Version</string>

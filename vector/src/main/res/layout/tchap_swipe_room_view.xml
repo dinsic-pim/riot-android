@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_layout"
+    android:layout_width="228dp"
+    android:layout_height="76dp">
+
+    <LinearLayout
+        android:id="@+id/swipe_layout_pin"
+        android:layout_width="76dp"
+        android:layout_height="match_parent"
+        android:background="@color/tchap_swipe_pin_button_color"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="17dp"
+            android:gravity="center"
+            android:src="@drawable/tchap_ic_swipe_pin" />
+
+        <TextView
+            android:id="@+id/tv_pin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:paddingTop="9dp"
+            android:text="@string/room_settings_pin_swipe"
+            android:textColor="@color/tchap_text_color_light"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/swipe_layout_silent"
+        android:layout_width="76dp"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/swipe_layout_pin"
+        android:background="@color/tchap_swipe_silent_notification_button_color"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:src="@drawable/tchap_ic_swipe_bell" />
+
+        <TextView
+            android:id="@+id/tv_silent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:paddingTop="7dp"
+            android:text="@string/room_settings_mute_swipe"
+            android:textColor="@color/tchap_text_color_light"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/swipe_layout_exit"
+        android:layout_width="76dp"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/swipe_layout_silent"
+        android:background="@color/tchap_swipe_exit_button_color"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:src="@drawable/tchap_ic_swipe_exit" />
+
+        <TextView
+            android:id="@+id/tv_exit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:paddingTop="9dp"
+            android:text="@string/room_settings_leave_swipe"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+    </LinearLayout>
+</RelativeLayout>

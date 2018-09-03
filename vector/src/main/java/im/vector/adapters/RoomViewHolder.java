@@ -27,16 +27,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import org.matrix.androidsdk.MXSession;
 import org.matrix.androidsdk.data.Room;
 import org.matrix.androidsdk.data.RoomSummary;
 import org.matrix.androidsdk.data.RoomTag;
 import org.matrix.androidsdk.data.store.IMXStore;
+import org.matrix.androidsdk.rest.callback.SimpleApiCallback;
+import org.matrix.androidsdk.rest.model.RoomMember;
 import org.matrix.androidsdk.util.BingRulesManager;
 import org.matrix.androidsdk.util.Log;
 import java.util.Set;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.gouv.tchap.util.DinsicUtils;
@@ -92,13 +95,25 @@ public class RoomViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.room_avatar_encrypted_icon)
     View vRoomEncryptedIcon;
 
-    @BindView(R.id.room_more_action_click_area)
+    @BindView(R.id.room_swipe_layout)
     @Nullable
-    View vRoomMoreActionClickArea;
+    public SwipeRevealLayout swipeLayout;
 
-    @BindView(R.id.room_more_action_anchor)
+    @BindView(R.id.room_item_view)
     @Nullable
-    View vRoomMoreActionAnchor;
+    public View roomItemView;
+
+    @BindView(R.id.swipe_layout_pin)
+    @Nullable
+    View vPinSwipeLayout;
+
+    @BindView(R.id.swipe_layout_silent)
+    @Nullable
+    View vSilentSwipeLayout;
+
+    @BindView(R.id.swipe_layout_exit)
+    @Nullable
+    View vExitSwipeLayout;
 
     public RoomViewHolder(final View itemView) {
         super(itemView);
@@ -265,29 +280,68 @@ public class RoomViewHolder extends RecyclerView.ViewHolder {
             vRoomTimestamp.setText(RoomUtils.getRoomTimestamp(context, roomSummary.getLatestReceivedEvent()));
         }
 
-        if (vRoomMoreActionClickArea != null && vRoomMoreActionAnchor != null) {
-            vRoomMoreActionClickArea.setOnClickListener(new View.OnClickListener() {
+        final Set<String> tags = room.getAccountData().getKeys();
+        final boolean isFavorite = tags != null && tags.contains(RoomTag.ROOM_TAG_FAVOURITE);
+        final BingRulesManager.RoomNotificationState roomNotificationState = session.getDataHandler().getBingRulesManager().getRoomNotificationState(room.getRoomId());
+        RoomMember member = room.getMember(session.getMyUserId());
+        final boolean isBannedKickedRoom = (null != member) && member.kickedOrBanned();
+
+        if (null != vPinSwipeLayout) {
+            vPinSwipeLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (null != moreRoomActionListener) {
-                        // In this case, we have a feedback issue because the notification mode change
-                        // is handled by an async task (with a very long delay).
-                        // We have overridden onMoreActionClick by onTchapMoreActionClick
-                        // in order to set the visibility of the vRoomNotificationMute on the notification option click
-                        // in RoomUtils.
-                        moreRoomActionListener.onTchapMoreActionClick(vRoomMoreActionAnchor, room, vRoomNotificationMute);
+                    if (isFavorite) {
+                        RoomUtils.updateRoomTag(session, room.getRoomId(), null, null, new SimpleApiCallback<Void>(context, v));
+                    } else {
+                        RoomUtils.updateRoomTag(session, room.getRoomId(), null, RoomTag.ROOM_TAG_FAVOURITE, new SimpleApiCallback<Void>(context, v));
                     }
+                    swipeLayout.close(true);
                 }
             });
         }
 
-        BingRulesManager.RoomNotificationState roomNotificationState = session.getDataHandler().getBingRulesManager().getRoomNotificationState(room.getRoomId());
-        if (null != vRoomNotificationMute) {
-            if (roomNotificationState.equals(BingRulesManager.RoomNotificationState.MUTE)) {
-                vRoomNotificationMute.setVisibility(View.VISIBLE);
-            } else {
-                vRoomNotificationMute.setVisibility(View.GONE);
-            }
+        if (null != vSilentSwipeLayout) {
+            vSilentSwipeLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (null != vRoomNotificationMute) {
+                        // Consider the current visibility of the notification mode icon (bell)
+                        // which is updated synchronously at each click.
+                        // By this way we don't depend on the current room notification state which
+                        // is updated with delay
+                        if (vRoomNotificationMute.getVisibility() == View.VISIBLE) {
+                            updateRoomNotificationsState(context, session, room.getRoomId(), BingRulesManager.RoomNotificationState.ALL_MESSAGES);
+                            vRoomNotificationMute.setVisibility(View.GONE);
+                        } else {
+                            updateRoomNotificationsState(context, session, room.getRoomId(), BingRulesManager.RoomNotificationState.MUTE);
+                            vRoomNotificationMute.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        // Consider here the current room notification state.
+                        // CAUTION: this state is updated with delay at each change.
+                        if (roomNotificationState.equals(BingRulesManager.RoomNotificationState.MUTE)) {
+                            updateRoomNotificationsState(context, session, room.getRoomId(), BingRulesManager.RoomNotificationState.ALL_MESSAGES);
+                        } else {
+                            updateRoomNotificationsState(context, session, room.getRoomId(), BingRulesManager.RoomNotificationState.MUTE);
+                        }
+                    }
+                    swipeLayout.close(true);
+                }
+            });
+        }
+
+        if (null != vExitSwipeLayout) {
+            vExitSwipeLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (isBannedKickedRoom) {
+                        room.forget(new SimpleApiCallback<Void>(context, v));
+                    } else {
+                        room.leave(new SimpleApiCallback<Void>(context, v));
+                    }
+                    swipeLayout.close(true);
+                }
+            });
         }
 
         if (null != room && null != vRoomPinFavorite) {
@@ -301,5 +355,39 @@ public class RoomViewHolder extends RecyclerView.ViewHolder {
                 vRoomPinFavorite.setVisibility(View.INVISIBLE);
             }
         }
+
+        if (null != vRoomNotificationMute) {
+            if (roomNotificationState.equals(BingRulesManager.RoomNotificationState.MUTE)) {
+                vRoomNotificationMute.setVisibility(View.VISIBLE);
+            } else {
+                vRoomNotificationMute.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void updateRoomNotificationsState(final Context context, final MXSession session, final String roomId, final BingRulesManager.RoomNotificationState state) {
+        session.getDataHandler().getBingRulesManager().updateRoomNotificationState(roomId, state, new BingRulesManager.onBingRuleUpdateListener() {
+            @Override
+            public void onBingRuleUpdateSuccess() {
+
+            }
+
+            @Override
+            public void onBingRuleUpdateFailure(final String errorMessage) {
+                // TODO display error message : Toast ?
+                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+
+                if (null != vRoomNotificationMute) {
+                    final BingRulesManager.RoomNotificationState roomNotificationState = session.getDataHandler().getBingRulesManager().getRoomNotificationState(roomId);
+
+
+                    if (roomNotificationState.equals(BingRulesManager.RoomNotificationState.MUTE)) {
+                        vRoomNotificationMute.setVisibility(View.VISIBLE);
+                    } else {
+                        vRoomNotificationMute.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
     }
 }

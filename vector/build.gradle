@@ -216,6 +216,9 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     kapt 'com.github.bumptech.glide:compiler:4.7.1'
 
+    // Use SwipeRevealLayout library to handle swipe gesture
+    implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
+
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.0.1'
 
     /************* Matrix SDK management **************/

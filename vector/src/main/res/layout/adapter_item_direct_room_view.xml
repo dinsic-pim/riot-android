@@ -1,153 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.chauthai.swipereveallayout.SwipeRevealLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/room_view"
+    android:id="@+id/room_swipe_layout"
     android:layout_width="match_parent"
-    android:layout_height="76dp">
+    android:layout_height="76dp"
+    app:dragEdge="right"
+    app:mode="same_level">
 
-    <ImageView
-        android:id="@+id/room_pin_ic"
-        android:layout_width="10dp"
-        android:layout_height="15dp"
-        android:src="@drawable/tchap_ic_pin_room"
-        android:visibility="invisible" />
+    <FrameLayout
+        android:id="@+id/swipe_item_layout"
+        android:layout_width="228dp"
+        android:layout_height="76dp">
 
-    <include
-        android:id="@+id/room_avatar_layout"
-        layout="@layout/adapter_item_circular_avatar_room_view"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginTop="18dp"
-        android:layout_toRightOf="@+id/room_pin_ic" />
+        <include layout="@layout/tchap_swipe_room_view" />
+    </FrameLayout>
 
-    <ImageView
-        android:id="@+id/room_avatar_encrypted_icon"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_alignBottom="@+id/room_avatar_layout"
-        android:layout_marginLeft="-10dp"
-        android:layout_toRightOf="@+id/room_avatar_layout"
-        android:src="@drawable/e2e_verified"
-        android:tint="?attr/default_icon_tint_color"
-        android:visibility="invisible"
-        tools:visibility="visible" />
+    <FrameLayout
+        android:id="@+id/room_item_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/room_avatar_layout"
-        android:paddingRight="10dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <!-- unread count badge -->
-        <TextView
-            android:id="@+id/room_unread_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/room_name"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="3dp"
-            android:layout_marginRight="5dp"
-            android:gravity="center"
-            android:minWidth="25dp"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:textColor="@android:color/white"
-            android:textSize="12sp"
-            android:visibility="gone"
-            tools:background="#AAff00ff"
-            tools:text="3.6K" />
+            <ImageView
+                android:id="@+id/room_pin_ic"
+                android:layout_width="10dp"
+                android:layout_height="15dp"
+                android:src="@drawable/tchap_ic_pin_room"
+                android:visibility="invisible" />
 
-        <TextView
-            android:id="@+id/room_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/room_unread_count"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif-regular"
-            android:maxLines="1"
-            android:maxWidth="180dp"
-            android:paddingTop="2dp"
-            android:textColor="@color/tchap_primary_text_color"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            tools:text="Room name" />
+            <include
+                android:id="@+id/room_avatar_layout"
+                layout="@layout/adapter_item_circular_avatar_room_view"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="18dp"
+                android:layout_toRightOf="@+id/room_pin_ic" />
 
-        <ImageView
-            android:id="@+id/notification_mute_bell"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_marginLeft="7dp"
-            android:layout_marginTop="2dp"
-            android:layout_toRightOf="@+id/room_name"
-            android:src="@drawable/tchap_ic_notification_mute_bell"
-            android:visibility="gone" />
+            <ImageView
+                android:id="@+id/room_avatar_encrypted_icon"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignBottom="@+id/room_avatar_layout"
+                android:layout_marginLeft="-10dp"
+                android:layout_toRightOf="@+id/room_avatar_layout"
+                android:src="@drawable/e2e_verified"
+                android:tint="?attr/default_icon_tint_color"
+                android:visibility="invisible"
+                tools:visibility="visible" />
 
-        <TextView
-            android:id="@+id/room_member_domain"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginTop="4dp"
-            android:layout_toLeftOf="@+id/room_more_action_ic"
-            android:ellipsize="end"
-            android:gravity="right"
-            android:maxLines="1"
-            android:maxWidth="95dp"
-            android:textAllCaps="false"
-            android:textColor="@color/vector_tchap_primary_color"
-            android:textSize="10sp"
-            tools:text="Room member domain" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@+id/room_avatar_layout"
+                android:paddingRight="10dp">
 
-        <TextView
-            android:id="@+id/room_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/room_name"
-            android:layout_marginRight="25dp"
-            android:layout_marginTop="3dp"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:maxWidth="220dp"
-            android:textSize="12sp"
-            tools:text="First message of the room is a bit too long to be displayed" />
+                <!-- unread count badge -->
+                <TextView
+                    android:id="@+id/room_unread_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/room_name"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center"
+                    android:minWidth="25dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    tools:background="#AAff00ff"
+                    tools:text="3.6K" />
 
-        <ImageView
-            android:id="@+id/room_more_action_ic"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_alignBottom="@+id/room_name"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/room_name"
-            android:src="@drawable/vector_actions_9b"
-            android:visibility="visible" />
+                <TextView
+                    android:id="@+id/room_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/room_unread_count"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-regular"
+                    android:maxLines="1"
+                    android:maxWidth="180dp"
+                    android:paddingTop="2dp"
+                    android:textColor="@color/tchap_primary_text_color"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="Room name" />
 
-        <TextView
-            android:id="@+id/room_update_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="5dp"
-            android:textColor="?attr/default_text_light_color"
-            android:textSize="12sp"
-            tools:text="14 Mar" />
-    </RelativeLayout>
+                <ImageView
+                    android:id="@+id/notification_mute_bell"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginLeft="7dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_toRightOf="@+id/room_name"
+                    android:src="@drawable/tchap_ic_notification_mute_bell"
+                    android:visibility="gone" />
 
-    <View
-        android:id="@+id/room_more_action_anchor"
-        android:layout_width="1dp"
-        android:layout_height="1dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="20dp"
-        android:visibility="gone" />
+                <TextView
+                    android:id="@+id/room_member_domain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:gravity="right"
+                    android:maxLines="1"
+                    android:maxWidth="95dp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/vector_tchap_primary_color"
+                    android:textSize="10sp"
+                    tools:text="Room member domain" />
 
-    <View
-        android:id="@+id/room_more_action_click_area"
-        android:layout_width="40dp"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true" />
-</RelativeLayout>
+                <TextView
+                    android:id="@+id/room_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/room_name"
+                    android:layout_marginRight="25dp"
+                    android:layout_marginTop="3dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:maxWidth="220dp"
+                    android:textSize="12sp"
+                    tools:text="First message of the room is a bit too long to be displayed" />
+
+                <TextView
+                    android:id="@+id/room_update_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="3dp"
+                    android:textColor="?attr/default_text_light_color"
+                    android:textSize="12sp"
+                    tools:text="14 Mar" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </FrameLayout>
+</com.chauthai.swipereveallayout.SwipeRevealLayout>
