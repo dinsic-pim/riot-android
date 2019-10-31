@@ -29,6 +29,8 @@ import org.matrix.androidsdk.core.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.gouv.tchap.util.HomeServerConnectionConfigFactoryKt;
+
 /**
  * Stores login credentials in SharedPreferences.
  */
@@ -70,7 +72,9 @@ public class LoginStorage {
 
             for (int i = 0; i < connectionConfigsStrings.length(); i++) {
                 configList.add(
-                        HomeServerConnectionConfig.fromJson(connectionConfigsStrings.getJSONObject(i))
+                        HomeServerConnectionConfigFactoryKt.cleanAcceptedTlsVersion(
+                                HomeServerConnectionConfig.fromJson(connectionConfigsStrings.getJSONObject(i))
+                        )
                 );
             }
 

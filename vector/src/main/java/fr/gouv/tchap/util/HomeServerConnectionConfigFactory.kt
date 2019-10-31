@@ -21,6 +21,7 @@ import android.os.Build
 import androidx.annotation.VisibleForTesting
 import fr.gouv.tchap.config.CERTIFICATE_FINGERPRINT_LIST
 import fr.gouv.tchap.config.ENABLE_CERTIFICATE_PINNING
+import okhttp3.TlsVersion
 import org.matrix.androidsdk.HomeServerConnectionConfig
 import org.matrix.androidsdk.ssl.Fingerprint
 import java.lang.Long.parseLong
@@ -44,6 +45,14 @@ fun createHomeServerConnectionConfig(homeServerUrl: String, identityServerUrl: S
             .withTlsLimitations(true, Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT)
             .withPin(ENABLE_CERTIFICATE_PINNING)
             .build()
+            .cleanAcceptedTlsVersion()
+}
+
+/**
+ * Clean the accepted TLS version by removing the unaccepted versions (which were accepted previously).
+ */
+fun HomeServerConnectionConfig.cleanAcceptedTlsVersion() = apply {
+    acceptedTlsVersions?.remove(TlsVersion.TLS_1_2)
 }
 
 @VisibleForTesting
